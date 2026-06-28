@@ -47,6 +47,23 @@ app.use('/api/nurse', nurseRoutes);
 app.use('/api/qr', qrRoutes);
 app.use('/api/agent', agentRoutes);
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static frontend assets in production
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// Fallback all frontend routes to React's index.html
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api') || req.path.startsWith('/health') || req.path.startsWith('/api-docs')) {
+    return next();
+  }
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
+
 // ─── 404 Handler ──────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({ error: `Route ${req.method} ${req.path} not found` });
