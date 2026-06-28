@@ -19,16 +19,20 @@ import './jobs/watcherCron.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ─── Middleware ───────────────────────────────────────────────
-// Allow any localhost port (Vite may start on 5173, 5174, etc.)
+// Allow any localhost port, same-origin Render domains, or custom client URL
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (curl, Postman) or any localhost origin
-    if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin)) {
+    // Allow requests with no origin (e.g. static assets without crossorigin, curl, Postman),
+    // any localhost origin, or any *.onrender.com subdomain
+    if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin) || origin.endsWith('.onrender.com')) {
       callback(null, true);
     } else {
       const allowed = process.env.CLIENT_URL || 'http://localhost:5173';
-      callback(origin === allowed ? null : new Error('CORS not allowed'), origin === allowed);
+      if (origin === allowed) {
+        callback(null, true);
+      } else {
+        callback(new Error('CORS not allowed'));
+      }
     }
   },
   credentials: true,
