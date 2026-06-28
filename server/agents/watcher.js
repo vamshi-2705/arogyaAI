@@ -39,11 +39,11 @@ async function getConversationHistory(sessionId, limit = 10) {
     .from('chat_messages')
     .select('role, content')
     .eq('session_id', sessionId)
-    .order('created_at', { ascending: true })
+    .order('created_at', { ascending: false })
     .limit(limit);
 
   if (error) throw error;
-  return data || [];
+  return (data || []).reverse();
 }
 
 async function saveMessage(sessionId, role, content, agent = 'watcher') {

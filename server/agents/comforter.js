@@ -16,11 +16,11 @@ async function getConversationHistory(sessionId, limit = 10) {
     .from('chat_messages')
     .select('role, content')
     .eq('session_id', sessionId)
-    .order('created_at', { ascending: true })
+    .order('created_at', { ascending: false })
     .limit(limit);
 
   if (error) throw error;
-  return data || [];
+  return (data || []).reverse();
 }
 
 async function saveMessage(sessionId, role, content, agent = 'comforter') {
@@ -41,7 +41,7 @@ export async function handleComforterMessage(sessionId, userMessage, language = 
   // Fetch session context
   const { data: session } = await supabase
     .from('patient_sessions')
-    .select('severity, queue_position, patient_name')
+    .select('severity, queue_position, patient_name, hospital_id')
     .eq('id', sessionId)
     .single();
 
@@ -50,6 +50,14 @@ export async function handleComforterMessage(sessionId, userMessage, language = 
     .select('main_complaint, pain_level, duration_hours')
     .eq('session_id', sessionId)
     .single();
+
+  // Fetch active nurses at this hospital
+  const { data: nursesList } = await supabase
+    .from('nurses')
+    .select('name')
+    .eq('hospital_id', session?.hospital_id);
+
+  const nurseNames = (nursesList || []).map(n => n.name).join(', ') || 'Priya';
 
   const triageSummary = triage
     ? `Complaint: ${triage.main_complaint}, Pain: ${triage.pain_level}/10, Duration: ${triage.duration_hours}h`
@@ -68,6 +76,7 @@ Patient triage summary: ${triageSummary}
 Current queue position: ${session?.queue_position || 'calculating...'}
 Current severity level: ${session?.severity || 'pending'}
 Patient name: ${session?.patient_name || 'Unknown'}
+Active Nurses on duty at this hospital: ${nurseNames}
 
 ${langInstruction}`;
 
