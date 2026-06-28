@@ -182,7 +182,6 @@ export default function NurseDashboard() {
     try {
       await api.post(`/api/nurse/patient/${pid}/call`);
       refetch();
-      window.open(`/patient/${pid}`, '_blank');
     } catch (e) {
       console.error('Failed to page patient:', e);
     }
