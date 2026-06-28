@@ -13,7 +13,13 @@ const router = express.Router();
 router.get('/:hospitalId', async (req, res, next) => {
   try {
     const { hospitalId } = req.params;
-    const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+
+    // Dynamically fallback to the current request's origin in production if CLIENT_URL is not set
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const host = req.get('host');
+    const fallbackUrl = `${protocol}://${host}`;
+
+    const clientUrl = process.env.CLIENT_URL || (process.env.NODE_ENV === 'production' ? fallbackUrl : 'http://localhost:5173');
 
     // QR encodes the patient entry URL with hospital ID
     const patientUrl = `${clientUrl}/qr?hospital=${hospitalId}`;
