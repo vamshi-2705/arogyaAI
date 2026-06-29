@@ -1,10 +1,5 @@
 # 🏥 Arogya Watch AI: AI-Powered ER Waiting Room Monitoring System <a href="https://arogya-watch-ai-eydz.onrender.com" target="_blank"><img src="https://img.shields.io/badge/Live%20Demo-Deployed-brightgreen?style=for-the-badge&logo=render&logoColor=white" align="right" alt="Live Demo" /></a>
 
-[![Hackathon](https://img.shields.io/badge/India_Runs_Hackathon-2026-red?style=for-the-badge)](https://github.com/vamshi-2705/arogyaAI)
-[![Team Size](https://img.shields.io/badge/Team_Size-3_Members-blue?style=for-the-badge)](#)
-[![Cost](https://img.shields.io/badge/Cost-%E2%82%B90_Budget-gold?style=for-the-badge)](#)
-[![Stack](https://img.shields.io/badge/Tech_Stack-React_%7C_Node.js_%7C_Supabase-cyan?style=for-the-badge)](#)
-
 **Arogya Watch AI** is India's first AI-powered Emergency Room (ER) waiting room monitoring system designed specifically for understaffed and overcrowded government hospitals. By turning patients' family members into monitored care partners via simple QR codes and localized WhatsApp-style chatbots, it ensures no patient deteriorates unnoticed in a waiting room again.
 
 ---
